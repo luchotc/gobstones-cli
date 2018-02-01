@@ -10,7 +10,8 @@ var options = getopt.create([
   ["m", "mulang_ast", "Print the Mulang AST of the program."],
   ["f", "format=FORMAT", "Format of the final board table (gbb|json|all). Default: json."],
   ["v", "version", "Display the version."],
-  ["h", "help", "Display this help."]
+  ["h", "help", "Display this help."],
+  ["l", "locale=LOCALE", "Locale code. Default: es."]
 ]);
 
 options.setHelp(

@@ -1,50 +1,53 @@
-var GobstonesInterpreterApi = require("gobstones-interpreter").GobstonesInterpreterAPI;
-var interpreter = function() { return new GobstonesInterpreterApi(); };
+module.exports = function(language){
 
-function parse(code, operation) {
-  var result = interpreter()[operation || "parse"](code);
+  var module = {};
 
-  if (result.reason)
-    throw {
-      status: "compilation_error",
-      result: result
-    };
+  var GobstonesInterpreterApi = require("gobstones-interpreter").GobstonesInterpreterAPI;
+  var interpreter = new GobstonesInterpreterApi();
+  if (language !== undefined){
+    interpreter.config.setLanguage(language)
+  }
 
-  return result;
-};
+  module.parse = function(code, operation) {
+    var result = interpreter[operation || "parse"](code);
 
-function interpret(program, board) {
-  var result = program.interpret(board);
+    if (result.reason)
+      throw {
+        status: "compilation_error",
+        result: result
+      };
 
-  if (result.reason)
-    throw {
-      status: "runtime_error",
-      result: result
-    };
+    return result;
+  };
 
-  return result;
-}
+  module.interpret = function(program, board) {
+    var result = program.interpret(board);
 
-function getAst(code) {
-  return parse(code, "getAst");
-}
+    if (result.reason)
+      throw {
+        status: "runtime_error",
+        result: result
+      };
 
-function parseProgram(code) {
-  return parse(code).program;
-}
+    return result;
+  }
 
-function readGbb(gbb) {
-  return interpreter().gbb.read(gbb);
-}
+  module.getAst = function(code) {
+    return parse(code, "getAst");
+  }
 
-function buildGbb(board) {
-  return interpreter().gbb.write(board);
-}
+  module.parseProgram = function(code) {
+    return parse(code).program;
+  }
 
-module.exports = {
-  getAst: getAst,
-  parseProgram: parseProgram,
-  interpret: interpret,
-  readGbb,
-  buildGbb
+   module.readGbb = function(gbb) {
+    return interpreter.gbb.read(gbb);
+  }
+
+  module.buildGbb = function(board) {
+    return interpreter.gbb.write(board);
+  }
+
+  return module;
+
 }

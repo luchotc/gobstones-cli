@@ -1,5 +1,5 @@
 var mulang = require('./mulang');
-var interpreter = require('./interpreter');
+var interpreter = require('./interpreter')(language);
 var astReplacer = require("./ast-replacer");
 var _ = require("lodash");
 var reporter = {}
